@@ -1,13 +1,17 @@
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
-from langchain_core.messages import SystemMessage, HumanMessage
 from langgraph.prebuilt import create_react_agent
+from langgraph.prebuilt.chat_agent_executor import AgentState
+
 
 
 
 def initialize_llm() -> ChatOpenAI:
     """Initialize the LLM model."""
     return ChatOpenAI(model="gpt-3.5-turbo")
+
+
 
 def create_sql_agent(db, llm: ChatOpenAI):
     """Create an SQL agent with a given database and LLM."""
@@ -30,20 +34,49 @@ def create_sql_agent(db, llm: ChatOpenAI):
         Do NOT skip this step.
         Then you should query the schema of the most relevant tables."""
 
-        system_message = SystemMessage(content=SQL_PREFIX)
-        agent_executor = create_react_agent(llm, tools, state_modifier=system_message)
+        #system_message = SystemMessage(content=SQL_PREFIX)
+
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", SQL_PREFIX),
+                ("placeholder", "{messages}"),
+            ]
+        )
+
+        def _modify_state_messages(state: AgentState):
+            return prompt.invoke({"messages": state["messages"]}).to_messages()
+
+
+        #agent_executor = create_react_agent(llm, tools, state_modifier=system_message)
+
+        agent_executor = create_react_agent(llm, tools, state_modifier=_modify_state_messages)
 
         return agent_executor
     except Exception as e:
 
         return None
 
+
 def execute_agent_query(agent_executor, query: str) -> None:
     """Send a query to the agent executor and process the response."""
     try:
+        messages = agent_executor.invoke({"messages": [("human", query)]})
+        print(query)
+        print("*******************")
+        print(messages["messages"][-1].content)
+
+        """ 
+        print(
+            {
+                "input": query,
+                "output": messages["messages"][-1].content,
+            }
+        )
+        
         for response in agent_executor.stream({"messages": [HumanMessage(content=query)]}):
             print(response)
             print("----")
+        """
     except Exception as e:
         print(e)
 
