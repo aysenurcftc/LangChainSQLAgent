@@ -1,5 +1,4 @@
 import ast
-
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
@@ -8,7 +7,6 @@ from langgraph.prebuilt.chat_agent_executor import AgentState
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
 from langchain.agents.agent_toolkits import create_retriever_tool
-import pandas as pd
 
 
 def initialize_llm() -> ChatOpenAI:
@@ -58,6 +56,17 @@ def query_table_columns(db, table_name, columns):
     except Exception as e:
         print(f"Error executing query for table {table_name}: {e}")
         return []
+
+
+def get_proper_noun(db):
+    actor_names = query_table_columns(db, "actor", ["first_name", "last_name"])
+    city = query_table_columns(db, "city", ["city"])
+    country = query_table_columns(db, "country", ["country"])
+
+    # Combine data from multiple tables
+    proper_nouns = actor_names + city + country
+
+    return proper_nouns
 
 
 def create_sql_agent(db, llm: ChatOpenAI, retriever_tool):

@@ -13,6 +13,7 @@ python-dotenv = "*"
 langgraph = "*"
 pandas = "*"
 faiss-cpu = "*"
+streamlit = "*"
 
 [dev-packages]
 

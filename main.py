@@ -5,7 +5,7 @@ from agent import (
     execute_agent_query,
     create_faiss_vector_db,
     create_retriever_tool_with_description,
-    query_table_columns,
+    get_proper_noun,
 )
 
 
@@ -26,12 +26,7 @@ def main():
 
             llm = initialize_llm()
 
-            actor_names = query_table_columns(db, "actor", ["first_name", "last_name"])
-            city = query_table_columns(db, "city", ["city"])
-            country = query_table_columns(db, "country", ["country"])
-
-            # Combine data from multiple tables
-            proper_nouns = actor_names + city + country
+            proper_nouns = get_proper_noun(db)
 
             vector_db = create_faiss_vector_db(proper_nouns)
 
