@@ -1,5 +1,13 @@
 from db_module import connect_to_db, wrap_connection_to_sqldatabase
-from agent import initialize_llm, create_sql_agent, execute_agent_query
+from agent import (
+    initialize_llm,
+    create_sql_agent,
+    execute_agent_query,
+    create_faiss_vector_db,
+    create_retriever_tool_with_description,
+    query_table_columns,
+)
+
 
 def main():
     """Main entry point for the application."""
@@ -17,10 +25,28 @@ def main():
                 return
 
             llm = initialize_llm()
-            agent_executor = create_sql_agent(db, llm)
+
+            actor_names = query_table_columns(db, "actor", ["first_name", "last_name"])
+            city = query_table_columns(db, "city", ["city"])
+            country = query_table_columns(db, "country", ["country"])
+
+            # Combine data from multiple tables
+            proper_nouns = actor_names + city + country
+
+            vector_db = create_faiss_vector_db(proper_nouns)
+
+            retriever_tool = create_retriever_tool_with_description(vector_db)
+
+            # result = retriever_tool.invoke("Ed Chase")
+            # print(result)
+
+            agent_executor = create_sql_agent(db, llm, retriever_tool)
 
             if agent_executor:
-                execute_agent_query(agent_executor, "How many customers are there?")
+                execute_agent_query(
+                    agent_executor,
+                    "How many people named Ed Chase are there in the actor table?",
+                )
             else:
                 print("Failed to create the SQL agent. Exiting.")
                 return
@@ -31,7 +57,6 @@ def main():
         if conn:
             conn.close()
             print("Database connection closed")
-
 
 
 if __name__ == "__main__":

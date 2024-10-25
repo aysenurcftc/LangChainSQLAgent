@@ -11,6 +11,8 @@ black = "*"
 psycopg2 = "*"
 python-dotenv = "*"
 langgraph = "*"
+pandas = "*"
+faiss-cpu = "*"
 
 [dev-packages]
 
