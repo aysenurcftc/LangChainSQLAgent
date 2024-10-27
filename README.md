@@ -3,7 +3,6 @@
 
 This project is a system that connects to a PostgreSQL database and executes AI-powered SQL queries. Using LangChain and FAISS, it processes database content in vector format and generates SQL queries that respond to questions asked in natural language. This optimizes database data retrieval and provides accurate results to the user.
 
-![sql agent](https://github.com/aysenurcftc/LangChainSQLAgent/blob/main/sql_agent.png)
 
 
 ## Environment Variables
