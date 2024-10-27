@@ -1,8 +1,12 @@
 
 # LangChain SQL Agent 
 
-This project is a system that connects to a PostgreSQL database and executes AI-powered SQL queries. Using LangChain and FAISS, it processes database content in vector format and generates SQL queries that respond to questions asked in natural language. This optimizes database data retrieval and provides accurate results to the user.
 
+![agent_sql](https://github.com/aysenurcftc/LangChainSQLAgent/blob/main/sql_agent.png)
+
+This project is a system that connects to a PostgreSQL database and runs AI-powered SQL queries. It uses LangChain and FAISS to convert database content into vector format and generate SQL queries based on natural language questions. This makes data retrieval from the database faster and more accurate. The project also features a user-friendly interface with Streamlit.
+
+![agen](https://github.com/aysenurcftc/LangChainSQLAgent/blob/main/agent.png)
 
 
 ## Environment Variables
@@ -45,7 +49,8 @@ Install dependencies
 Start the project
 
 ```bash
-   pipenv run python main.py
+   streamlit run python main.py
 
 ```
+
 
