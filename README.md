@@ -31,7 +31,7 @@ This project is a system that connects to a PostgreSQL database and runs AI-powe
 Clone the project
 
 ```bash
-  https://github.com/aysenurcftc/LangChainSQLAgent.git
+ git clone https://github.com/aysenurcftc/LangChainSQLAgent.git
 ```
 
 Go to the project directory
